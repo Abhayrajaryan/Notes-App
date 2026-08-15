@@ -1,0 +1,209 @@
+/* Simple Notes App Styles */
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f5f5f7;
+    margin: 0;
+    min-height: 100vh;
+}
+
+.notes-app {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.notes-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e2e7;
+}
+
+.notes-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: #1d1d1f;
+}
+
+.btn-new-note {
+    display: inline-block;
+    margin-left: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #1d1d1f;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.btn-new-note:hover {
+    background-color: #007aff;
+}
+
+.notes-search {
+    margin: 1.5rem 0;
+}
+
+.notes-search input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d2d2d7;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.notes-search input:focus {
+    outline: none;
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.notes-list {
+    margin-top: 1rem;
+}
+
+.notes-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.note-item {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.note-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.note-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    color: #1d1d1f;
+    font-weight: 600;
+}
+
+.note-preview {
+    color: #86868b;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.note-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.note-action {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.note-action.view {
+    color: #1d1d1f;
+    background: #f5f5f7;
+}
+
+.note-action.edit {
+    color: #007aff;
+    background: #eff6ff;
+}
+
+.note-action.delete {
+    color: #ff6b6b;
+    background: #fff0f0;
+}
+
+.empty-state {
+    color: #86868b;
+    font-style: italic;
+    padding: 2rem;
+    text-align: center;
+}
+
+/* Form Styles */
+
+.notes-header .btn-back {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    color: #1d1d1f;
+    text-decoration: none;
+    border: 1px solid #d2d2d7;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.notes-header .btn-back:hover {
+    background: #f5f5f7;
+}
+
+.note-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #1d1d1f;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d2d2d7;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.form-group .error-message {
+    color: #ff6b6b;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.btn-save {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007aff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.btn-save:hover {
+    background-color: #0051d5;
+}
