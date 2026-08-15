@@ -1,0 +1,57 @@
+services:
+  nginx:
+    build:
+      context: ./nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    networks:
+      - notes-network
+    restart: always
+    depends_on:
+      - notes-app
+
+  mysql:
+    container_name: mysql
+    image: mysql
+    environment:
+      MYSQL_DATABASE: "notes_db"
+      MYSQL_ROOT_PASSWORD: "root"
+    ports:
+      - "3306:3306"
+    volumes:
+      - notes-app-volume:/var/lib/mysql
+    networks:
+      - notes-network
+    restart: always
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-proot" ]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  notes-app:
+    image: rajabhay/notes-app
+    container_name: notes-app
+    ports:
+      - "8080:8080"
+    env_file:
+      - ".env"
+    networks:
+      - notes-network
+    depends_on:
+      - mysql
+    restart: always
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+networks:
+  notes-network:
+
+volumes:
+  notes-app-volume:
