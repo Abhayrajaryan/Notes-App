@@ -1,38 +1,132 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Notes</title>
+    <th:block th:replace="~{fragments/theme-toggle :: themeInit}"></th:block>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-    <div class="notes-app">
-        <div class="notes-header">
+<div class="notes-app">
+    <div class="notes-header">
+        <div class="eyebrow-row">
             <h1>Notes</h1>
-            <a href="/notes/new" class="btn-new-note">New Note</a>
-        </div>
-
-        <div class="notes-search">
-            <input type="text" id="searchInput" placeholder="Search notes..." />
-        </div>
-
-        <div class="notes-list">
-            <ul>
-                <li th:each="note : ${notes}">
-                    <div class="note-item">
-                        <h3 th:text="${note.title}" class="note-title"></h3>
-                        <p th:text="${note.mainContent}" class="note-preview"></p>
-                        <div class="note-actions">
-                            <a th:href="@{/notes/{id}(id=${note.id})}" class="note-action view">View</a>
-                            <a th:href="@{/notes/{id}/edit(id=${note.id})}" class="note-action edit">Edit</a>
-                            <form th:action="@{/notes/{id}/delete(id=${note.id})}" method="post" style="display:inline">
-                                <button type="submit" class="note-action delete">Delete</button>
-                            </form>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-            <div th:if="${notes.empty}" class="empty-state">No notes found. Create your first note!</div>
+            <div class="header-actions">
+                <th:block th:replace="~{fragments/theme-toggle :: themeToggle}"></th:block>
+            </div>
         </div>
     </div>
+
+    <div class="notes-search">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Search" autocomplete="off" />
+        <button type="button" id="searchClearBtn" class="search-clear-btn" aria-label="Clear search" title="Clear" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="M9 9l6 6M15 9l-6 6" stroke="var(--bg-search)" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+    </div>
+
+    <div class="notes-list">
+        <ul id="notesList">
+            <li class="note-item" th:each="note : ${notes}" th:data-search="${#strings.toLowerCase(note.title + ' ' + note.mainContent)}">
+                <div class="note-row">
+                    <a th:href="@{/notes/{id}(id=${note.id})}" class="note-row-main">
+                        <h3 th:text="${note.title}" class="note-title"></h3>
+                        <div class="note-meta-line">
+                            <span class="note-date" th:text="${#temporals.format(note.updatedOn, 'MMM d')}">Jan 1</span>
+                            <span class="note-preview" th:text="${note.mainContent}"></span>
+                        </div>
+                    </a>
+                    <div class="note-row-tools">
+                        <a th:href="@{/notes/{id}/edit(id=${note.id})}" class="icon-btn" aria-label="Edit note" title="Edit">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                        </a>
+                        <form th:action="@{/notes/{id}/delete(id=${note.id})}" method="post" class="inline-form" onsubmit="return confirm('Delete this note? This cannot be undone.');">
+                            <button type="submit" class="icon-btn danger" aria-label="Delete note" title="Delete">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <div th:if="${notes.empty}" class="empty-state">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+            <h2>No Notes</h2>
+            <p>Tap the compose button to create your first note.</p>
+        </div>
+
+        <div id="noResultsState" class="empty-state" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <h2>No Results</h2>
+            <p>No notes matching "<span id="noResultsQuery"></span>".</p>
+        </div>
+    </div>
+</div>
+
+<a href="/notes/new" class="fab-compose" aria-label="New note" title="New note">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+</a>
+
+<script th:inline="javascript">
+    (function () {
+        var input = document.getElementById('searchInput');
+        var list = document.getElementById('notesList');
+        var items = Array.prototype.slice.call(document.querySelectorAll('#notesList .note-item'));
+        var noResultsState = document.getElementById('noResultsState');
+        var noResultsQuery = document.getElementById('noResultsQuery');
+        var clearBtn = document.getElementById('searchClearBtn');
+
+        function runSearch() {
+            var q = input.value.trim().toLowerCase();
+            var visibleCount = 0;
+
+            items.forEach(function (item) {
+                var haystack = item.getAttribute('data-search') || '';
+                var matches = haystack.indexOf(q) !== -1;
+                item.style.display = matches ? '' : 'none';
+                if (matches) visibleCount += 1;
+            });
+
+            var hasQuery = q.length > 0;
+            var showNoResults = hasQuery && items.length > 0 && visibleCount === 0;
+
+            if (list) {
+                list.style.display = showNoResults ? 'none' : '';
+            }
+            if (noResultsState) {
+                noResultsState.style.display = showNoResults ? '' : 'none';
+            }
+            if (showNoResults && noResultsQuery) {
+                noResultsQuery.textContent = input.value.trim();
+            }
+            if (clearBtn) {
+                clearBtn.style.display = hasQuery ? '' : 'none';
+            }
+        }
+
+        input.addEventListener('input', runSearch);
+
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                input.value = '';
+                runSearch();
+                input.blur();
+            }
+        });
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function () {
+                input.value = '';
+                runSearch();
+                input.focus();
+            });
+        }
+
+        runSearch();
+    })();
+</script>
+<th:block th:replace="~{fragments/theme-toggle :: themeScript}"></th:block>
 </body>
 </html>

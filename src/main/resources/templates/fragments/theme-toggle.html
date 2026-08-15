@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Fragment: themeInit
+  Placed in <head>, before the stylesheet link. Runs synchronously so the
+  correct theme (saved choice, or OS preference as a fallback) is applied to
+  <html> before first paint — this avoids a flash of the wrong theme.
+-->
+<th:block th:fragment="themeInit">
+    <script>
+        (function () {
+            try {
+                var stored = localStorage.getItem('notes-theme');
+                var theme = stored || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+</th:block>
+
+<!--
+  Fragment: themeToggle
+  The toggle button itself (sun/moon icons, swapped via CSS based on
+  data-theme) plus its click handler. Drop this inside any header-actions
+  row. Safe to include on every page — each instance wires up independently.
+-->
+<th:block th:fragment="themeToggle">
+    <button type="button" class="header-icon-btn theme-toggle-btn js-theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2"/><path d="M12 20v2"/>
+            <path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/>
+            <path d="M2 12h2"/><path d="M20 12h2"/>
+            <path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+    </button>
+</th:block>
+
+<!--
+  Fragment: themeScript
+  Wires up every .js-theme-toggle button on the page (in case a page ever
+  includes more than one). Place once, near the end of <body>.
+-->
+<th:block th:fragment="themeScript">
+    <script>
+        (function () {
+            var buttons = document.querySelectorAll('.js-theme-toggle');
+            buttons.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var current = document.documentElement.getAttribute('data-theme') || 'light';
+                    var next = current === 'dark' ? 'light' : 'dark';
+                    document.documentElement.setAttribute('data-theme', next);
+                    try {
+                        localStorage.setItem('notes-theme', next);
+                    } catch (e) { /* storage unavailable, theme just won't persist */ }
+                });
+            });
+        })();
+    </script>
+</th:block>
+
+</body>
+</html>
