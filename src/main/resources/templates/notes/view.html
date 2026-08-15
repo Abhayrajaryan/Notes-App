@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${note.title}">Note</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<div class="notes-app">
+    <div class="notes-header">
+        <h1 th:text="${note.title}">Note Title</h1>
+        <a href="/notes" class="btn-back">Back to Notes</a>
+    </div>
+
+    <div class="note-form">
+        <p class="note-preview" th:text="${note.mainContent}">Note content goes here.</p>
+
+        <div class="note-actions">
+            <a th:href="@{/notes/{id}/edit(id=${note.id})}" class="note-action edit">Edit</a>
+            <form th:action="@{/notes/{id}/delete(id=${note.id})}" method="post" style="display:inline">
+                <button type="submit" class="note-action delete">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

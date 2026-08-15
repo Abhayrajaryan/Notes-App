@@ -2,18 +2,16 @@ package com.abhay.notesapp.service;
 
 import com.abhay.notesapp.entity.Note;
 import com.abhay.notesapp.repository.NoteRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class NoteService {
 
     private final NoteRepository noteRepository;
-
-    public NoteService(NoteRepository noteRepository) {
-        this.noteRepository = noteRepository;
-    }
 
     public List<Note> findAll() {
         return noteRepository.findAll();

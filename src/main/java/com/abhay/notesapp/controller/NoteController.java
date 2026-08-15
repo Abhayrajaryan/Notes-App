@@ -2,6 +2,7 @@ package com.abhay.notesapp.controller;
 
 import com.abhay.notesapp.entity.Note;
 import com.abhay.notesapp.service.NoteService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -15,14 +16,11 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/notes")
+@RequiredArgsConstructor
 public class NoteController {
 
     private final NoteService noteService;
     private static final Logger logger = LoggerFactory.getLogger(NoteController.class);
-
-    public NoteController(NoteService noteService) {
-        this.noteService = noteService;
-    }
 
     @GetMapping
     public String listNotes(Model model) {
